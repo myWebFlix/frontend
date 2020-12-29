@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-
+    
 });
 
 function onSignIn(googleUser) {
@@ -10,22 +10,19 @@ function onSignIn(googleUser) {
     console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     
     let id_token = googleUser.getAuthResponse().id_token;
+
+    googleUser.disconnect()
+
     console.log(id_token);
+    if (id_token != undefined) {
 
-    var d = new Date()
-    d.setTime(d.getTime()+(365*24*60*60*1000))
-    document.cookie = "user_token=" + id_token + "; expires=" + d.toGMTString();
+        console.log(id_token);
 
-    var xhr = new XMLHttpRequest();
+        var d = new Date()
+        d.setTime(d.getTime()+(365*24*60*60*1000))
+        document.cookie = "user_token=" + id_token + "; expires=" + d.toGMTString() + ";SameSite=Lax";
 
-    console.log("GET call");
-
-    xhr.open('GET', 'http://localhost:8080/v1/videos', true);
-    //xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('ID-Token', id_token);
-    xhr.onload = function() {
-        console.log('Response:\n' + xhr.responseText);
-    };
-    xhr.send();
+        window.location.href = 'index.html';
+    }
 }
 
