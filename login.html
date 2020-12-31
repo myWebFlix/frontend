@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WebFlix</title>
+        <meta charset="UTF-8">
+        <!--<meta name="google-signin-client_id" content="304157826665-k1nt1phqk7qgsgk5m2hh6hlfkof6g5oe.apps.googleusercontent.com">-->
+        <meta name="google-signin-client_id" content="321634089538-fge6kl40hqtie38r6issu5fidnmdiosa.apps.googleusercontent.com">
+        <script src="https://apis.google.com/js/platform.js" defer></script>
+		<script type="text/javascript" src="auth.js"></script>
+        <script type="text/javascript" src="login.js"></script>
+    </head>
+    <body>
+        <div class="g-signin2 centered" data-onsuccess="onSignIn"></div>
+        <img class="titleImage" src="/assets/title2.png"/>
+    </body>
+    <style>
+        body {
+            background-image: url('/assets/background.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed; 
+            background-size: cover;
+        }
+
+        .titleImage {
+            margin-top: 2%;
+            margin-left: 20%;
+        }
+
+        .centered {
+            position: fixed;
+            right: 8%;
+            bottom: 8%;
+        }
+    </style>
+</html>
