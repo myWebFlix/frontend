@@ -1,22 +1,29 @@
+let user_token = null;
+let video_id = null;
+
 document.addEventListener("DOMContentLoaded", () => {
 	setupAuth();
 
-	let user_token = getCookie("user_token");
+	user_token = getCookie("user_token");
 
 	const urlParams = new URLSearchParams(window.location.search);
-	let videoId = parseInt(urlParams.get("id"));
+	video_id = parseInt(urlParams.get("id"));
 	
-	if (isNaN(videoId)) {
+	if (isNaN(video_id)) {
 		//window.location.href = "index.html"
-		videoId = 1;
+		video_id = 1;
 	}
+
+	setupRating(video_id);
 
 	let xhrStream = new XMLHttpRequest();
 	let xhrMeta = new XMLHttpRequest();
 	let xhrComm = new XMLHttpRequest();
 
-	xhrStream.open('GET', 'http://localhost:8080/v1/streams/' + videoId, true);
-	//xhrStream.open('GET', 'http://martin.zoxxnet.com/webflix/v1/streams/' + videoId, true);
+	// Get stream
+	
+	//xhrStream.open('GET', 'http://localhost:8080/v1/streams/' + video_id, true);
+	xhrStream.open('GET', 'http://rok.zoxxnet.com/video-stream/v1/streams/' + video_id, true);
 	xhrStream.setRequestHeader('ID-Token', user_token);
 	xhrStream.onload = () => {
 		console.log('Response:\n' + xhrStream.responseText);
@@ -29,8 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	};
 
-	//xhrMeta.open('GET', 'http://localhost:8080/v1/videos/' + videoId, true);
-	xhrMeta.open('GET', 'http://martin.zoxxnet.com/webflix/v1/videos/' + videoId, true);
+	// Get metadata
+
+	//xhrMeta.open('GET', 'http://localhost:8080/v1/videos/' + video_id, true);
+	xhrMeta.open('GET', 'http://martin.zoxxnet.com/webflix/v1/videos/' + video_id, true);
 	xhrMeta.setRequestHeader('ID-Token', user_token);
 	xhrMeta.onload = () => {
 		console.log('Response:\n' + xhrMeta.responseText);
@@ -43,7 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	};
 
-	xhrComm.open('GET', 'http://martin.zoxxnet.com/comments/v1/comments/' + videoId, true);
+	// Get comments
+
+	xhrComm.open('GET', 'http://martin.zoxxnet.com/comments/v1/comments/' + video_id, true);
 	xhrComm.setRequestHeader('ID-Token', user_token);
 	xhrComm.onload = () => {
 		console.log('Response:\n' + xhrComm.responseText);
@@ -104,5 +115,59 @@ function setupComments(comments) {
 		div.innerHTML = `<p>User ${comment.comment_user_id} at ${comment.comment_timestamp}</p>
 		<p>${comment.comment_text}</p><hr>`;
 		parent.appendChild(div);
+	}
+}
+
+// Global variable for storing state
+const RATING = {
+	current: null,
+	stars: []
+};
+
+function setupRating() {
+	for (let i = 1; i <= 5; ++i) {
+		let star = document.getElementById("rating" + i);
+		RATING.stars.push(star);
+		star.addEventListener("click", () => postRating(i, video_id));
+	}
+
+	let xhr = new XMLHttpRequest();
+	xhr.open('GET', 'http://rok.zoxxnet.com/ratings/v1/ratings/' + video_id, true);
+	xhr.setRequestHeader('ID-Token', user_token);
+	xhr.onload = () => {
+		if (xhr.status == 200) {
+			let json = JSON.parse(xhr.responseText);
+			setRating(json.rating);
+		}
+	};
+
+	xhr.send();
+}
+
+function postRating(rating) {
+	let xhr = new XMLHttpRequest();
+	xhr.open('POST', 'http://rok.zoxxnet.com/ratings/v1/ratings/' + video_id, true);
+	xhr.setRequestHeader('ID-Token', user_token);
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.onload = () => {
+		if (xhr.status == 200) {
+			let json = JSON.parse(xhr.responseText);
+			setRating(json.rating);
+		}
+	};
+
+	let body = { rating: rating };
+	xhr.send(JSON.stringify(body));
+}
+
+function setRating(rating) {
+	if (rating !== RATING.current) {
+		for (let i = 0; i < 5; ++i) {
+			if (i < rating)
+				RATING.stars[i].classList.add("active");
+			else
+				RATING.stars[i].classList.remove("active");
+		}
+		RATING.current = rating;
 	}
 }
