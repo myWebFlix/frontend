@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>WebFlix</title>
+		<meta charset="UTF-8">
+		<script type="text/javascript" src="upload.js"></script>
+	</head>
+	<body>
+		<div>
+			<input id="title" type="text" placeholder="Video title"/>
+		</div>
+		<div>
+			<input id="description" type="text" placeholder="Video description" />
+		</div>
+		<div>
+			<input id="upload" type="file" />
+		</div>
+		
+		<!-- <form enctype="multipart/form-data" action="http://localhost:8080/v1/upload" method="post">
+			<input id="image-file" type="file" />
+			<input type="submit" value="Submit" />
+		</form> -->
+		<button onclick="upload();">Upload</button>
+	</body>
+</html>

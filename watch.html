@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>WebFlix</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="google-signin-client_id" content="304157826665-k1nt1phqk7qgsgk5m2hh6hlfkof6g5oe.apps.googleusercontent.com">
+		<!-- <meta name="google-signin-client_id" content="321634089538-fge6kl40hqtie38r6issu5fidnmdiosa.apps.googleusercontent.com"> -->
+		<script src="https://apis.google.com/js/platform.js" defer></script>
+		<script type="text/javascript" src="auth.js"></script>
+		<script type="text/javascript" src="watch.js"></script>
+
+		<style>
+
+			.logoutButtonImage {
+				width: 40px;
+				height: auto;
+			}
+
+			.logoutButton {
+				position: absolute;
+				right: 20px;
+				cursor: pointer;
+			}
+			
+			.rating > span {
+  				cursor: pointer;
+				font-size: 32px;
+				color: whitesmoke;
+				text-shadow: 0px 0px 2px black;
+			}
+
+			.rating > .active {
+				color: gold;
+			}
+
+			.rating:hover > :not(span:hover ~ span) {
+				color: orangered;
+			}
+
+		</style>
+	</head>
+	<body>
+		<button class="logoutButton" onclick="signOut();"><img class="logoutButtonImage" src="/assets/lgout.png" /></button>
+
+		<h2 id="videoTitle">(Loading...)</h2>
+		<video id="video" width="640" height="480" controls></video>
+		<p>Quality:
+			<select id="videoQuality">
+			</select>
+		</p>
+		<p>Rating:
+			<span id="rating" class="rating" onclick="">
+				<span id="rating1">★</span><!--
+				--><span id="rating2">★</span><!--
+				--><span id="rating3">★</span><!--
+				--><span id="rating4">★</span><!--
+				--><span id="rating5">★</span>
+			</span>
+		</p>
+		<p id="videoDesc">(Loading...)</p>
+		<h3>Comments:</h3>
+		<div id="comments">
+		</div>
+	</body>
+</html>
