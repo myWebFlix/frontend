@@ -1,3 +1,5 @@
+const URL = "http://rok.zoxxnet.com";
+
 let user_token = null;
 let video_id = null;
 
@@ -23,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	// Get stream
 	
 	//xhrStream.open('GET', 'http://localhost:8080/v1/streams/' + video_id, true);
-	xhrStream.open('GET', 'http://rok.zoxxnet.com/video-stream/v1/streams/' + video_id, true);
+	xhrStream.open('GET', URL + '/video-stream/v1/streams/' + video_id, true);
 	xhrStream.setRequestHeader('ID-Token', user_token);
 	xhrStream.onload = () => {
 		console.log('Response:\n' + xhrStream.responseText);
@@ -39,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	// Get metadata
 
 	//xhrMeta.open('GET', 'http://localhost:8080/v1/videos/' + video_id, true);
-	xhrMeta.open('GET', 'http://martin.zoxxnet.com/webflix/v1/videos/' + video_id, true);
+	xhrMeta.open('GET', URL + '/webflix/v1/videos/' + video_id, true);
 	xhrMeta.setRequestHeader('ID-Token', user_token);
 	xhrMeta.onload = () => {
 		console.log('Response:\n' + xhrMeta.responseText);
@@ -54,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	// Get comments
 
-	xhrComm.open('GET', 'http://martin.zoxxnet.com/comments/v1/comments/' + video_id, true);
+	xhrComm.open('GET', URL + '/comments/v1/comments/' + video_id, true);
 	xhrComm.setRequestHeader('ID-Token', user_token);
 	xhrComm.onload = () => {
 		console.log('Response:\n' + xhrComm.responseText);
@@ -111,9 +113,27 @@ function setupComments(comments) {
 	const parent = document.getElementById("comments");
 
 	for (let comment of comments) {
+
+		let date = new Date(comment.comment_timestamp);
+		let dateString = `${date.getHours()}:${date.getMinutes()}, ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+
+		
+
 		const div = document.createElement("div");
-		div.innerHTML = `<p>User ${comment.comment_user_id} at ${comment.comment_timestamp}</p>
-		<p>${comment.comment_text}</p><hr>`;
+
+		const p_info = document.createElement("p");
+		p_info.textContent = `User TODO at ${dateString}`;
+
+		const p_text = document.createElement("p");
+		p_text.textContent = `${comment.comment_text}`
+
+		div.appendChild(p_info);
+		div.appendChild(p_text);
+		div.appendChild(document.createElement("hr")); // Temporary
+
+		// div.innerHTML = `<p>User ${comment.comment_user_id} at ${dateString}</p>
+		// 	<p>${comment.comment_text}</p><hr>`;
+
 		parent.appendChild(div);
 	}
 }
@@ -132,7 +152,7 @@ function setupRating() {
 	}
 
 	let xhr = new XMLHttpRequest();
-	xhr.open('GET', 'http://rok.zoxxnet.com/ratings/v1/ratings/' + video_id, true);
+	xhr.open('GET', URL + '/ratings/v1/ratings/' + video_id, true);
 	xhr.setRequestHeader('ID-Token', user_token);
 	xhr.onload = () => {
 		if (xhr.status == 200) {
@@ -144,9 +164,10 @@ function setupRating() {
 	xhr.send();
 }
 
+// Send rating POST request
 function postRating(rating) {
 	let xhr = new XMLHttpRequest();
-	xhr.open('POST', 'http://rok.zoxxnet.com/ratings/v1/ratings/' + video_id, true);
+	xhr.open('POST', URL + '/ratings/v1/ratings/' + video_id, true);
 	xhr.setRequestHeader('ID-Token', user_token);
 	xhr.setRequestHeader('Content-Type', 'application/json');
 	xhr.onload = () => {
@@ -160,6 +181,7 @@ function postRating(rating) {
 	xhr.send(JSON.stringify(body));
 }
 
+// Set rating UI
 function setRating(rating) {
 	if (rating !== RATING.current) {
 		for (let i = 0; i < 5; ++i) {
@@ -169,5 +191,26 @@ function setRating(rating) {
 				RATING.stars[i].classList.remove("active");
 		}
 		RATING.current = rating;
+	}
+}
+
+function submitComment() {
+	let text = document.getElementById("commentInput").value;
+	
+	text = text.trim();
+	if (text.length > 0) {
+		let xhr = new XMLHttpRequest();
+		xhr.open('POST', URL + '/comments/v1/comments/' + video_id, true);
+		xhr.setRequestHeader('ID-Token', user_token);
+		xhr.setRequestHeader('Content-Type', 'application/json');
+		xhr.onload = () => {
+			if (xhr.status == 200) {
+				// let json = JSON.parse(xhr.responseText);
+				// setRating(json.rating);
+			}
+		};
+
+		let body = { comment_text: text };
+		xhr.send(JSON.stringify(body));
 	}
 }
