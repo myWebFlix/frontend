@@ -1,3 +1,5 @@
+const URL = "http://martin.zoxxnet.com"; // "http://rok.zoxxnet.com";
+
 document.addEventListener("DOMContentLoaded", () => {
 	setupAuth();
 
@@ -12,7 +14,7 @@ function getVideos() {
 	var xhr = new XMLHttpRequest();
 
 	//xhr.open('GET', 'http://localhost:8080/v1/videos', true);
-	xhr.open('GET', 'http://martin.zoxxnet.com/webflix/v1/videos', true);
+	xhr.open('GET', URL + '/webflix/v1/videos', true);
 	xhr.setRequestHeader('ID-Token', user_token);
 	xhr.onload = function() {
 		console.log('Response:\n' + xhr.responseText);

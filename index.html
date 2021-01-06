@@ -4,7 +4,7 @@
 <title>WebFlix</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!--<meta name="google-signin-client_id" content="304157826665-k1nt1phqk7qgsgk5m2hh6hlfkof6g5oe.apps.googleusercontent.com">-->
+<!-- <meta name="google-signin-client_id" content="304157826665-k1nt1phqk7qgsgk5m2hh6hlfkof6g5oe.apps.googleusercontent.com"> -->
 <meta name="google-signin-client_id" content="321634089538-fge6kl40hqtie38r6issu5fidnmdiosa.apps.googleusercontent.com">
 <script src="https://apis.google.com/js/platform.js" defer></script>
 <script type="text/javascript" src="auth.js"></script>
@@ -17,11 +17,13 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
+  color: whitesmoke;
 }
 
 .header {
   text-align: center;
   padding: 32px;
+  background: #484848;
 }
 
 .row {
@@ -88,10 +90,14 @@ body {
 }
 
 body {
-    background-image: url('/assets/background2.jpg');
+    background-image: url('/assets/background4.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed; 
     background-size: cover;
+}
+
+#videoGrid {
+  margin-top: 5%;
 }
 
 </style>
@@ -101,10 +107,8 @@ body {
 <!-- Header -->
 <!--https://eu2.flamingtext.com/net-fu/jobs/27000106331109911.html-->
 <div class="header" id="myHeader">
-    <!--<button onclick="getVideos();">Submit</button>-->
     <button class="logoutButton" onclick="signOut();"><img class="logoutButtonImage" src="/assets/lgout.png" /></button> 
 
-    </br></br>
     <img src="/assets/welcomeToWebflix2.png"/>
     </br></br>
     <img src="/assets/subtitle2.png"/>

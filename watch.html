@@ -4,13 +4,22 @@
 		<title>WebFlix</title>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="google-signin-client_id" content="304157826665-k1nt1phqk7qgsgk5m2hh6hlfkof6g5oe.apps.googleusercontent.com">
-		<!-- <meta name="google-signin-client_id" content="321634089538-fge6kl40hqtie38r6issu5fidnmdiosa.apps.googleusercontent.com"> -->
+		<!-- <meta name="google-signin-client_id" content="304157826665-k1nt1phqk7qgsgk5m2hh6hlfkof6g5oe.apps.googleusercontent.com"> -->
+		<meta name="google-signin-client_id" content="321634089538-fge6kl40hqtie38r6issu5fidnmdiosa.apps.googleusercontent.com">
 		<script src="https://apis.google.com/js/platform.js" defer></script>
 		<script type="text/javascript" src="auth.js"></script>
 		<script type="text/javascript" src="watch.js"></script>
 
 		<style>
+
+			body {
+				background-image: url('/assets/background4.jpg');
+				background-repeat: no-repeat;
+				background-attachment: fixed; 
+				background-size: cover;
+				color: whitesmoke;
+				margin: 0px;
+			}
 
 			.logoutButtonImage {
 				width: 40px;
@@ -21,6 +30,8 @@
 				position: absolute;
 				right: 20px;
 				cursor: pointer;
+				right: 2%;
+				top: 4%;
 			}
 			
 			.rating > span {
@@ -38,29 +49,96 @@
 				color: orangered;
 			}
 
+			#videoTitle {
+				text-align: center;
+			}
+
+			.video-window {
+				margin-top: 5%;
+				margin-bottom: 5%;
+			}
+
+			#video {
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			.header {
+				padding: 1px;
+				text-align: center;
+				background: #484848;
+				color: white;
+				font-size: 20px;
+			}
+
+			.Footer {
+				background: #484848;
+				position: absolute;
+				right: 0px;
+				left: 0px;
+			}
+
+			.ratingControl {
+				position: absolute;
+				right: 4%;
+				padding-top: 1%;
+			}
+
+			.qualityControl {
+				text-align: center;
+				padding-top: 1%;
+			}
+
+			.comments {
+				text-align: center;
+				margin-top: 5%;
+			}
+
+			.video-description {
+				text-align: center;
+				margin-top: 4%;
+			}
+
 		</style>
 	</head>
 	<body>
-		<button class="logoutButton" onclick="signOut();"><img class="logoutButtonImage" src="/assets/lgout.png" /></button>
 
-		<h2 id="videoTitle">(Loading...)</h2>
-		<video id="video" width="640" height="480" controls></video>
-		<p>Quality:
-			<select id="videoQuality">
-			</select>
-		</p>
-		<p>Rating:
-			<span id="rating" class="rating" onclick="">
-				<span id="rating1">★</span><!--
-				--><span id="rating2">★</span><!--
-				--><span id="rating3">★</span><!--
-				--><span id="rating4">★</span><!--
-				--><span id="rating5">★</span>
-			</span>
-		</p>
-		<p id="videoDesc">(Loading...)</p>
-		<h3>Comments:</h3>
-		<div id="comments">
+		<div class="header">
+			<h2 id="videoTitle">(Loading...)</h2>
+			<button class="logoutButton" onclick="signOut();"><img class="logoutButtonImage" src="/assets/lgout.png" /></button>
+		</div>
+
+
+		<div class="video-window">
+			<video id="video" width="640" height="480" controls></video>
+		</div>
+
+		<div class="Footer">
+			<div class="ratingControl">
+				<h4>Rating:
+					<span id="rating" class="rating" onclick="">
+						<span id="rating1">★</span><!--
+						--><span id="rating2">★</span><!--
+						--><span id="rating3">★</span><!--
+						--><span id="rating4">★</span><!--
+						--><span id="rating5">★</span>
+					</span>
+				</h4>
+			</div>
+			<div class="qualityControl">
+				<h4>Quality:
+					<select id="videoQuality">
+					</select>
+				</h4>
+			</div>
+			<div class="video-description"><h4>Video description:</h4><p id="videoDesc">(Loading...)</p></div>
+			<div class="comments">
+				<h3>Comments:</h3>
+				<textarea id="commentInput"></textarea><input id="commentSubmit" type="button" onclick="submitComment();" value="Submit" />
+				<div id="comments">
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

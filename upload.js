@@ -1,14 +1,13 @@
+const URL = "http://martin.zoxxnet.com"; // "http://rok.zoxxnet.com";
+
 document.addEventListener("DOMContentLoaded", () => {
 
 });
 
 
 function upload() {
-	//const url = "http://34.107.92.162/video-upload/v1/upload";
-	const url = "http://localhost:8080/v1/upload";
-
 	var oReq = new XMLHttpRequest();
-	oReq.open("POST", url, true);
+	oReq.open("POST", URL + "/video-upload/v1/upload", true);
 	oReq.onload = function (oEvent) {
 		console.log("Uploaded.");
 	};
