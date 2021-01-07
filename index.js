@@ -19,10 +19,10 @@ function getVideos() {
 	xhr.onload = function() {
 		console.log('Response:\n' + xhr.responseText);
 		
-		if (xhr.status == 401) {
-			window.location.href = 'login.html';
-		} else {
+		if (xhr.status == 200) {
 			generateVideoGrid(JSON.parse(xhr.responseText));
+		} else if (xhr.status == 401) {
+			window.location.href = 'login.html';
 		}
 
 	};

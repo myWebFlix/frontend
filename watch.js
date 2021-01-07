@@ -30,10 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	xhrStream.onload = () => {
 		console.log('Response:\n' + xhrStream.responseText);
 		
-		if (xhrStream.status == 401) {
-			window.location.href = 'login.html';
-		} else {
+		if (xhrStream.status == 200) {
 			setupStream(JSON.parse(xhrStream.responseText));
+		} else if (xhrStream.status == 401) {
+			window.location.href = 'login.html';
 		}
 
 	};
@@ -46,10 +46,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	xhrMeta.onload = () => {
 		console.log('Response:\n' + xhrMeta.responseText);
 		
-		if (xhrMeta.status == 401) {
-			window.location.href = 'login.html';
-		} else {
+		if (xhrMeta.status == 200) {
 			setupMetadata(JSON.parse(xhrMeta.responseText));
+		} else if (xhrMeta.status == 401) {
+			window.location.href = 'login.html';
 		}
 
 	};
@@ -60,11 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
 	xhrComm.setRequestHeader('ID-Token', user_token);
 	xhrComm.onload = () => {
 		console.log('Response:\n' + xhrComm.responseText);
-		
-		if (xhrComm.status == 401) {
-			window.location.href = 'login.html';
-		} else {
+
+		if (xhrComm.status == 200) {
 			setupComments(JSON.parse(xhrComm.responseText));
+		} else if (xhrComm.status == 401) {
+			window.location.href = 'login.html';
 		}
 
 	};
