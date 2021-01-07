@@ -1,4 +1,4 @@
-const URL = "http://martin.zoxxnet.com"; // "http://rok.zoxxnet.com";
+const URL = "http://rok.zoxxnet.com";
 
 document.addEventListener("DOMContentLoaded", () => {
 

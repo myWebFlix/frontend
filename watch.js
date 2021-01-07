@@ -1,4 +1,4 @@
-const URL = "http://martin.zoxxnet.com"; // "http://rok.zoxxnet.com";
+const URL = "http://rok.zoxxnet.com";
 
 let user_token = null;
 let video_id = null;
@@ -114,18 +114,20 @@ function setupComments(comments) {
 
 	for (let comment of comments) {
 
-		let date = new Date(comment.comment_timestamp);
-		let dateString = `${date.getHours()}:${date.getMinutes()}, ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+		let date = new Date(comment.timestamp);
+		let hours = date.getHours().toString().padStart(2, '0');
+		let	minutes = date.getMinutes().toString().padStart(2, '0');
+		let dateString = `${hours}:${minutes}, ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
 
 		
 
 		const div = document.createElement("div");
 
 		const p_info = document.createElement("p");
-		p_info.textContent = `User TODO at ${dateString}`;
+		p_info.textContent = `User ${comment.user_name} at ${dateString}`;
 
 		const p_text = document.createElement("p");
-		p_text.textContent = `${comment.comment_text}`
+		p_text.textContent = `${comment.text}`
 
 		div.appendChild(p_info);
 		div.appendChild(p_text);
@@ -195,18 +197,26 @@ function setRating(rating) {
 }
 
 function submitComment() {
-	let text = document.getElementById("commentInput").value;
+	const commentInput = document.getElementById("commentInput");
+	const commentStatus = document.getElementById("commentStatus");
+
+	let text = commentInput.value;
+	commentInput.value = "";
 	
 	text = text.trim();
 	if (text.length > 0) {
+		
+		commentStatus.innerHTML = "Submitting comment ..."
+
 		let xhr = new XMLHttpRequest();
 		xhr.open('POST', URL + '/comments/v1/comments/' + video_id, true);
 		xhr.setRequestHeader('ID-Token', user_token);
 		xhr.setRequestHeader('Content-Type', 'application/json');
 		xhr.onload = () => {
 			if (xhr.status == 200) {
-				// let json = JSON.parse(xhr.responseText);
-				// setRating(json.rating);
+				commentStatus.innerHTML = "Comment submitted succesfully!";
+			} else {
+				commentStatus.innerHTML = "Error submitting comment!";
 			}
 		};
 
