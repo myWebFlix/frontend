@@ -12,14 +12,15 @@ document.addEventListener("DOMContentLoaded", () => {
 	video_id = parseInt(urlParams.get("id"));
 	
 	if (isNaN(video_id)) {
-		window.location.href = "index.html"
+		//window.location.href = "index.html"
+		video_id = 1;
 	}
 
-	getComments(0);
-	setupRating();
+	setupRating(video_id);
 
 	let xhrStream = new XMLHttpRequest();
 	let xhrMeta = new XMLHttpRequest();
+	let xhrComm = new XMLHttpRequest();
 
 	// Get stream
 	
@@ -53,9 +54,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	};
 
+	// Get comments
+
+	xhrComm.open('GET', URL + '/comments/v1/comments/' + video_id, true);
+	xhrComm.setRequestHeader('ID-Token', user_token);
+	xhrComm.onload = () => {
+		console.log('Response:\n' + xhrComm.responseText);
+
+		if (xhrComm.status == 200) {
+			setupComments(JSON.parse(xhrComm.responseText));
+		} else if (xhrComm.status == 401) {
+			window.location.href = 'login.html';
+		}
+
+	};
+
 
 	xhrStream.send();
 	xhrMeta.send();
+	xhrComm.send();
 });
 
 function setupStream(streams) {
@@ -92,82 +109,9 @@ function setupMetadata(meta) {
 	desc.innerText = meta.description;
 }
 
-const COMMENTS = {
-	max: 5,
-	page: 0,
-	pages: 1,
-	loading: false
-}
-
-function getComments(page) {
-	if (COMMENTS.loading)
-		return;
-	COMMENTS.loading = true;
-
-	let query = `{
-		allComments(video_id: ${video_id}, pagination: {offset: ${page * COMMENTS.max}, limit: ${COMMENTS.max}}) {
-			result {
-				user_name 
-				timestamp 
-				text
-			}
-			pagination {
-				offset 
-				limit 
-				total
-			}
-		}
-	}`;
-
-	query = query.replace(/\s+/g, ' '); // Minify query
-	
-	let xhr = new XMLHttpRequest();
-	xhr.open('POST', URL + '/comments/graphql', true);
-	xhr.setRequestHeader('ID-Token', user_token);
-	xhr.setRequestHeader('Content-Type', 'application/graphql');
-	xhr.onload = () => {
-		console.log('Response:\n' + xhr.responseText);
-
-		if (xhr.status == 200) {
-			setupComments(JSON.parse(xhr.responseText));
-		} else if (xhr.status == 401) {
-			window.location.href = 'login.html';
-		}
-
-		COMMENTS.loading = false;
-	};
-
-	xhr.send(query);
-}
-
-function commentsNext() {
-	if (COMMENTS.page + 1 < COMMENTS.pages)
-		getComments(COMMENTS.page + 1);
-}
-
-function commentsPrev() {
-	if (COMMENTS.page > 0)
-		getComments(COMMENTS.page - 1)
-}
-
-function setupComments(json) {
+function setupComments(comments) {
 	const parent = document.getElementById("comments");
-	parent.innerHTML = "";
 
-	console.log(json);
-
-	// Pagination
-
-	let pag = json.data.allComments.pagination;
-	COMMENTS.pages = Math.ceil(pag.total / COMMENTS.max);
-	COMMENTS.page = Math.trunc(pag.offset / COMMENTS.max);
-	document.getElementById("commentsPageMax").innerHTML = COMMENTS.pages;
-	document.getElementById("commentsPage").innerHTML = COMMENTS.page + 1;
-
-	// Comments
-
-	let comments = json.data.allComments.result;
-	let counter = pag.offset;
 	for (let comment of comments) {
 
 		let date = new Date(comment.timestamp);
@@ -175,10 +119,12 @@ function setupComments(json) {
 		let	minutes = date.getMinutes().toString().padStart(2, '0');
 		let dateString = `${hours}:${minutes}, ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
 
+		
+
 		const div = document.createElement("div");
 
 		const p_info = document.createElement("p");
-		p_info.textContent = `(#${++counter}) User ${comment.user_name} at ${dateString}`;
+		p_info.textContent = `User ${comment.user_name} at ${dateString}`;
 
 		const p_text = document.createElement("p");
 		p_text.textContent = `${comment.text}`
@@ -192,7 +138,6 @@ function setupComments(json) {
 
 		parent.appendChild(div);
 	}
-
 }
 
 // Global variable for storing state
